@@ -30,6 +30,9 @@ namespace my_db {
         // 对于更复杂的解析，可以用更结构化的字段
     };
 
+    /// <summary>
+    /// 编译器（负责编译原理部分）
+    /// </summary>
     class Parser {
     public:
         Parser() = default;

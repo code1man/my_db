@@ -3,13 +3,22 @@
 #include <sstream>
 
 namespace my_db {
-
+    /// <summary>
+    /// 变为小写
+    /// </summary>
+    /// <param name="s">输入命令</param>
     void Parser::to_lower(std::string& s) {
         for (char& c : s) {
             c = std::tolower(c);
         }
     }
 
+    /// <summary>
+    /// 分割字符串
+    /// </summary>
+    /// <param name="s">输入的命令</param>
+    /// <param name="delimiter"></param>
+    /// <returns></returns>
     std::vector<std::string> Parser::split_string(const std::string& s, char delimiter) {
         std::vector<std::string> tokens;
         std::string token;
