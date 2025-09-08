@@ -1,6 +1,8 @@
 #include "my_db/storage/table.h"
 #include <utility>
 
+using namespace std;
+
 namespace my_db {
 
     Table::~Table() {
@@ -11,11 +13,11 @@ namespace my_db {
     }
 
     Table::Table(Table&& other) noexcept
-        : name(std::move(other.name)),
-        path_name(std::move(other.path_name)),
-        col_name(std::move(other.col_name)),
-        type(std::move(other.type)),
-        size(std::move(other.size)),
+        : name(move(other.name)),
+        path_name(move(other.path_name)),
+        col_name(move(other.col_name)),
+        type(move(other.type)),
+        size(move(other.size)),
         fp(other.fp) {
         other.fp = nullptr;
     }
@@ -27,11 +29,11 @@ namespace my_db {
                 fclose(fp);
             }
             // ÒÆ¶¯×ÊÔ´
-            name = std::move(other.name);
-            path_name = std::move(other.path_name);
-            col_name = std::move(other.col_name);
-            type = std::move(other.type);
-            size = std::move(other.size);
+            name = move(other.name);
+            path_name = move(other.path_name);
+            col_name = move(other.col_name);
+            type = move(other.type);
+            size = move(other.size);
             fp = other.fp;
             other.fp = nullptr;
         }

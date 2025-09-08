@@ -1,6 +1,8 @@
 #include "my_db/executor.h"
 #include <iostream>
 
+using namespace std;
+
 namespace my_db {
 
     Executor::Executor(StorageEngine& storage) : storage_(storage) {}
@@ -22,14 +24,14 @@ namespace my_db {
         case CommandType::EXIT:
             return false;
         default:
-            std::cout << "Unknown command or not implemented." << std::endl;
+            cout << "Unknown command or not implemented." << endl;
             return true;
         }
     }
 
     bool Executor::execute_create_database(const ParsedCommand& cmd) {
         if (cmd.target.empty()) {
-            std::cout << "Database name missing." << std::endl;
+            cout << "Database name missing." << endl;
             return true;
         }
         storage_.myCreateDataBase(cmd.target);
@@ -38,7 +40,7 @@ namespace my_db {
 
     bool Executor::execute_drop_database(const ParsedCommand& cmd) {
         if (cmd.target.empty()) {
-            std::cout << "Database name missing." << std::endl;
+            cout << "Database name missing." << endl;
             return true;
         }
         storage_.myDropDataBase(cmd.target);
@@ -47,7 +49,7 @@ namespace my_db {
 
     bool Executor::execute_open_database(const ParsedCommand& cmd) {
         if (cmd.target.empty()) {
-            std::cout << "Database name missing." << std::endl;
+            cout << "Database name missing." << endl;
             return true;
         }
         storage_.myOpenDataBase(cmd.target);
@@ -61,7 +63,7 @@ namespace my_db {
 
     bool Executor::execute_create_table(const ParsedCommand& cmd) {
         if (cmd.target.empty()) {
-            std::cout << "Table name missing." << std::endl;
+            cout << "Table name missing." << endl;
             return true;
         }
         storage_.myCreateTable(cmd.target);
@@ -70,7 +72,7 @@ namespace my_db {
 
     bool Executor::execute_drop_table(const ParsedCommand& cmd) {
         if (cmd.target.empty()) {
-            std::cout << "Table name missing." << std::endl;
+            cout << "Table name missing." << endl;
             return true;
         }
         storage_.myDropTable(cmd.target);

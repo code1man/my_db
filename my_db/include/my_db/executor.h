@@ -6,7 +6,9 @@
 #include "my_db/storage/storage_engine.h"
 
 namespace my_db {
-
+    /// <summary>
+    /// Ö´ÐÐSQLÓï¾ä
+    /// </summary>
     class Executor {
     public:
         Executor(StorageEngine& storage);

@@ -7,7 +7,9 @@ namespace my_db {
 
     class Parser;
     class Executor;
-
+    /// <summary>
+    /// 负责展示交互式命令行界面
+    /// </summary>
     class CLI {
     public:
         CLI(Parser& parser, Executor& executor);

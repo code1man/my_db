@@ -9,6 +9,8 @@
 #include <io.h>
 #include <fstream>
 
+using namespace std;
+
 namespace my_db {
 
     StorageEngine::StorageEngine() {
@@ -27,18 +29,18 @@ namespace my_db {
         open = false;
     }
 
-    void StorageEngine::myOpenDataBase(std::string dataBaseName) {
+    void StorageEngine::myOpenDataBase(string dataBaseName) {
         if (open) {
-            std::cout << "请先关闭当前打开的数据库" << std::endl;
+            cout << "请先关闭当前打开的数据库" << endl;
             return;
         }
-        std::string pathName = "D:\\mini_db\\repos\\" + dataBaseName;
+        string pathName = "D:\\mini_db\\repos\\" + dataBaseName;
         if (0 != _access(pathName.c_str(), 0)) {
-            std::cout << "该数据库不存在" << std::endl;
+            cout << "该数据库不存在" << endl;
         }
         else {
             prePath = pathName + "\\";
-            std::cout << "打开数据库成功" << std::endl;
+            cout << "打开数据库成功" << endl;
             open = true;
         }
     }
@@ -54,46 +56,46 @@ namespace my_db {
         open = false;
     }
 
-    void StorageEngine::myCreateDataBase(std::string dataBaseName) {
-        std::string pathName = "D:\\mini_db\\repos\\" + dataBaseName;
+    void StorageEngine::myCreateDataBase(string dataBaseName) {
+        string pathName = "D:\\mini_db\\repos\\" + dataBaseName;
         if (0 != _access(pathName.c_str(), 0)) {
             if (0 == _mkdir(pathName.c_str()))
-                std::cout << "创建成功" << std::endl;
+                cout << "创建成功" << endl;
             else
-                std::cout << "创建失败" << std::endl;
+                cout << "创建失败" << endl;
             return;
         }
-        std::cout << "该数据库已存在" << std::endl;
+        cout << "该数据库已存在" << endl;
     }
 
-    void StorageEngine::myDropDataBase(std::string dataBaseName) {
-        std::string pathName = "D:\\mini_db\\repos\\" + dataBaseName;
+    void StorageEngine::myDropDataBase(string dataBaseName) {
+        string pathName = "D:\\mini_db\\repos\\" + dataBaseName;
         if (0 == _access(pathName.c_str(), 0)) {
             pathName = "rd " + pathName;
             if (0 == system(pathName.c_str()))
-                std::cout << "删除数据库" << dataBaseName << "成功" << std::endl;
+                cout << "删除数据库" << dataBaseName << "成功" << endl;
             else
-                std::cout << "删除数据库" << dataBaseName << "失败" << std::endl;
+                cout << "删除数据库" << dataBaseName << "失败" << endl;
             return;
         }
-        std::cout << "数据库" << dataBaseName << "不存在" << std::endl;
+        cout << "数据库" << dataBaseName << "不存在" << endl;
     }
 
-    void StorageEngine::myCreateTable(std::string tableName) {
-        std::vector<std::string> colName;
-        std::vector<std::string> type;
-        std::vector<int> size;
-        std::string tmp;
+    void StorageEngine::myCreateTable(string tableName) {
+        vector<string> colName;
+        vector<string> type;
+        vector<int> size;
+        string tmp;
         getchar();
-        getline(std::cin, tmp);
-        getline(std::cin, tmp);
+        getline(cin, tmp);
+        getline(cin, tmp);
         while (tmp != ")") {
-            std::stringstream ss(tmp);
-            std::string x;
+            stringstream ss(tmp);
+            string x;
             ss >> x; colName.push_back(x);
             ss >> x;
             int pos = x.find('(');
-            if (pos == std::string::npos) {
+            if (pos == string::npos) {
                 type.push_back(x);
                 size.push_back(1);
             }
@@ -104,10 +106,10 @@ namespace my_db {
                     num = num * 10 + x[i] - '0';
                 size.push_back(num);
             }
-            getline(std::cin, tmp);
+            getline(cin, tmp);
         }
         tableName += ".txt";
-        std::string pathName = prePath + tableName;
+        string pathName = prePath + tableName;
         if (0 != _access(pathName.c_str(), 0)) {
             Tables* ptr = new Tables;
             ptr->name = tableName;
@@ -116,25 +118,25 @@ namespace my_db {
             ptr->type = type;
             ptr->size = size;
             ptr->fp = fopen(pathName.c_str(), "w");
-            std::string wrin;
+            string wrin;
             wrin.clear();
             for (int i = 0; i < colName.size(); i++)
-                wrin += colName[i] + ";" + type[i] + ";" + std::to_string(size[i]) + ";";
+                wrin += colName[i] + ";" + type[i] + ";" + to_string(size[i]) + ";";
             wrin += "\n";
             fprintf(ptr->fp, wrin.c_str());
             fclose(ptr->fp);
             tab.push_back(ptr);
-            std::cout << "创建新表成功!" << std::endl;
+            cout << "创建新表成功!" << endl;
             return;
         }
-        std::cout << "该表已经存在!" << std::endl;
+        cout << "该表已经存在!" << endl;
     }
 
-    void StorageEngine::myDropTable(std::string tableName) {
+    void StorageEngine::myDropTable(string tableName) {
         tableName += ".txt";
-        std::string pathName = prePath + tableName;
+        string pathName = prePath + tableName;
         if (0 != _access(pathName.c_str(), 0)) {
-            std::cout << "该表不存在!" << std::endl;
+            cout << "该表不存在!" << endl;
         }
         else {
             for (int i = 0; i < tab.size(); i++) {
@@ -146,26 +148,26 @@ namespace my_db {
                 }
             }
             remove(pathName.c_str());
-            std::cout << "删除成功!" << std::endl;
+            cout << "删除成功!" << endl;
         }
     }
 
-    int StorageEngine::posIsNos(std::string tableName) {
-        std::string pathName = prePath + tableName + ".txt";
+    int StorageEngine::posIsNos(string tableName) {
+        string pathName = prePath + tableName + ".txt";
         if (0 != _access(pathName.c_str(), 0)) {
-            std::cout << "该表不存在!" << std::endl;
+            cout << "该表不存在!" << endl;
             return -1;
         }
         FILE* tempfptr = fopen(pathName.c_str(), "r");
         char contant[100];
         fscanf(tempfptr, "%s", contant);
-        std::string tmp = contant;
+        string tmp = contant;
         for (int i = 0; i < tmp.size(); i++) {
             if (tmp[i] == ';')
                 tmp[i] = ' ';
         }
-        std::stringstream check(tmp);
-        std::string x, y, z;
+        stringstream check(tmp);
+        string x, y, z;
         Tables* nxt = new Tables;
         nxt->name = tableName;
         while (check >> x) {
@@ -180,9 +182,9 @@ namespace my_db {
         return tab.size() - 1;
     }
 
-    void StorageEngine::myInsert(std::string tableName, std::string value) {
+    void StorageEngine::myInsert(string tableName, string value) {
         if (!open) {
-            std::cout << "无选中数据库!" << std::endl;
+            cout << "无选中数据库!" << endl;
             return;
         }
         int pos = inf;
@@ -196,11 +198,11 @@ namespace my_db {
             pos = posIsNos(tableName);
         if (pos == -1) return;
 
-        std::stringstream ss(value);
-        std::string tmp2; ss >> tmp2;
+        stringstream ss(value);
+        string tmp2; ss >> tmp2;
         tab[pos]->fp = fopen(tab[pos]->pathName.c_str(), "a");
         for (int i = 0; i < tab[pos]->type.size(); i++) {
-            std::string tmp = tab[pos]->type[i];
+            string tmp = tab[pos]->type[i];
             if (tmp == "int") {
                 int x; ss >> x;
                 fprintf(tab[pos]->fp, "%d", x);
@@ -231,12 +233,12 @@ namespace my_db {
         }
         fprintf(tab[pos]->fp, "%c", '\n');
         fclose(tab[pos]->fp);
-        std::cout << "插入成功!" << std::endl;
+        cout << "插入成功!" << endl;
     }
 
-    void StorageEngine::myDelete(std::string tableName, std::string isWhere) {
+    void StorageEngine::myDelete(string tableName, string isWhere) {
         if (!open) {
-            std::cout << "无选中数据库!" << std::endl;
+            cout << "无选中数据库!" << endl;
             return;
         }
         int pos = inf;
@@ -250,9 +252,9 @@ namespace my_db {
             pos = posIsNos(tableName);
         if (pos == -1) return;
 
-        std::stringstream ss(isWhere);
+        stringstream ss(isWhere);
         int wherePos = inf;
-        std::string typeName, toValue, whr, deng;
+        string typeName, toValue, whr, deng;
         ss >> whr >> typeName >> deng >> toValue;
         for (int i = 0; i < tab[pos]->colName.size(); i++) {
             if (tab[pos]->colName[i] == typeName) {
@@ -261,7 +263,7 @@ namespace my_db {
             }
         }
 
-        std::string pathName2 = prePath + "tmp.txt";
+        string pathName2 = prePath + "tmp.txt";
         FILE* tmpfptr = fopen(pathName2.c_str(), "w");
         char sentence[1024];
         tab[pos]->fp = fopen(tab[pos]->pathName.c_str(), "r");
@@ -275,8 +277,8 @@ namespace my_db {
             while (!feof(tab[pos]->fp)) {
                 memset(sentence, 0, sizeof(sentence));
                 fgets(sentence, 1024, tab[pos]->fp);
-                std::stringstream myTmp(sentence);
-                std::string x;
+                stringstream myTmp(sentence);
+                string x;
                 for (int i = 0; i <= wherePos; i++)
                     myTmp >> x;
                 if (x == toValue) continue;
@@ -287,14 +289,14 @@ namespace my_db {
         fclose(tab[pos]->fp);
         remove(tab[pos]->pathName.c_str());
         if (0 == rename(pathName2.c_str(), tab[pos]->pathName.c_str()))
-            std::cout << "删除成功!" << std::endl;
+            cout << "删除成功!" << endl;
         else
-            std::cout << "删除失败!" << std::endl;
+            cout << "删除失败!" << endl;
     }
 
-    void StorageEngine::myUpdate(std::string tableName, std::string toColName, std::string newValue, std::string isWhere) {
+    void StorageEngine::myUpdate(string tableName, string toColName, string newValue, string isWhere) {
         if (!open) {
-            std::cout << "无选中数据库!" << std::endl;
+            cout << "无选中数据库!" << endl;
             return;
         }
         int pos = inf;
@@ -308,9 +310,9 @@ namespace my_db {
             pos = posIsNos(tableName);
         if (pos == -1) return;
 
-        std::stringstream ss(isWhere);
+        stringstream ss(isWhere);
         int wherePos = inf, updataPos = inf;
-        std::string typeName, toValue, whr, deng;
+        string typeName, toValue, whr, deng;
         ss >> whr >> typeName >> deng >> toValue;
         for (int i = 0; i < tab[pos]->colName.size(); i++) {
             if (tab[pos]->colName[i] == typeName) {
@@ -325,7 +327,7 @@ namespace my_db {
             }
         }
 
-        std::string pathName2 = prePath + "tmp.txt";
+        string pathName2 = prePath + "tmp.txt";
         FILE* tmpfptr = fopen(pathName2.c_str(), "w");
         char sentence[1024];
         tab[pos]->fp = fopen(tab[pos]->pathName.c_str(), "r");
@@ -338,7 +340,7 @@ namespace my_db {
         if (!flag) {
             while (!feof(tab[pos]->fp)) {
                 for (int i = 0; i < tab[pos]->type.size(); i++) {
-                    std::string tmp = tab[pos]->type[i];
+                    string tmp = tab[pos]->type[i];
                     if (tmp == "int") {
                         int x; fscanf(tab[pos]->fp, "%d", &x);
                         if (i == updataPos)
@@ -386,13 +388,13 @@ namespace my_db {
             while (!feof(tab[pos]->fp)) {
                 memset(sentence, 0, sizeof(sentence));
                 fgets(sentence, 1024, tab[pos]->fp);
-                std::stringstream myTmp(sentence);
-                std::string x;
+                stringstream myTmp(sentence);
+                string x;
                 for (int i = 0; i <= wherePos; i++)
                     myTmp >> x;
                 if (x == toValue) {
-                    std::stringstream myTmp2(sentence);
-                    std::string input;
+                    stringstream myTmp2(sentence);
+                    string input;
                     input.clear();
                     for (int i = 0; i < tab[pos]->colName.size(); i++) {
                         myTmp2 >> x;
@@ -416,14 +418,14 @@ namespace my_db {
         fclose(tab[pos]->fp);
         remove(tab[pos]->pathName.c_str());
         if (0 == rename(pathName2.c_str(), tab[pos]->pathName.c_str()))
-            std::cout << "更新成功!" << std::endl;
+            cout << "更新成功!" << endl;
         else
-            std::cout << "更新失败!" << std::endl;
+            cout << "更新失败!" << endl;
     }
 
-    void StorageEngine::myQuery(std::string toColName, std::string tableName, std::string isWhere) {
+    void StorageEngine::myQuery(string toColName, string tableName, string isWhere) {
         if (!open) {
-            std::cout << "无选中数据库!" << std::endl;
+            cout << "无选中数据库!" << endl;
             return;
         }
         int pos = inf;
@@ -447,45 +449,45 @@ namespace my_db {
                 if (contant[i] == ';')
                     contant[i] = ' ';
             }
-            std::stringstream ss(contant);
-            std::string x;
+            stringstream ss(contant);
+            string x;
             for (int i = 0; i < tab[pos]->size.size(); i++) {
                 int width = 15;
                 if (tab[pos]->size[i] != 1)
                     width = tab[pos]->size[i];
                 ss >> x;
-                std::cout << std::left << std::setw(width) << x;
+                cout << left << setw(width) << x;
                 ss >> x;
                 ss >> x;
             }
-            std::cout << std::endl;
+            cout << endl;
 
             while (!feof(tab[pos]->fp)) {
                 memset(contant, 0, sizeof(contant));
                 fgets(contant, sizeof(contant), tab[pos]->fp);
                 if (strlen(contant) == 0) break;
-                std::stringstream out(contant);
-                std::string x;
+                stringstream out(contant);
+                string x;
                 for (int i = 0; i < tab[pos]->type.size(); i++) {
                     out >> x;
                     int width = 15;
                     if (tab[pos]->size[i] != 1)
                         width = tab[pos]->size[i];
-                    std::string tmp = tab[pos]->type[i];
+                    string tmp = tab[pos]->type[i];
                     if (tmp == "int")
-                        std::cout << std::left << std::setw(width) << atoi(x.c_str());
+                        cout << left << setw(width) << atoi(x.c_str());
                     else if (tmp == "float" || tmp == "double")
-                        std::cout << std::left << std::setw(width) << atof(x.c_str());
+                        cout << left << setw(width) << atof(x.c_str());
                     else if (tmp == "char")
-                        std::cout << std::left << std::setw(width) << x;
+                        cout << left << setw(width) << x;
                 }
-                std::cout << std::endl;
+                cout << endl;
             }
         }
         else {
-            std::stringstream ss(isWhere);
+            stringstream ss(isWhere);
             int wherePos = inf, aimPos = inf;
-            std::string typeName, toValue, whr, deng;
+            string typeName, toValue, whr, deng;
             ss >> whr >> typeName >> deng >> toValue;
             for (int i = 0; i < tab[pos]->colName.size(); i++) {
                 if (tab[pos]->colName[i] == typeName) {
@@ -503,8 +505,8 @@ namespace my_db {
             while (!feof(tab[pos]->fp)) {
                 memset(contant, 0, sizeof(contant));
                 fgets(contant, sizeof(contant), tab[pos]->fp);
-                std::stringstream myTmp(contant);
-                std::string x, check, out;
+                stringstream myTmp(contant);
+                string x, check, out;
                 for (int i = 0; i < tab[pos]->colName.size(); i++) {
                     myTmp >> x;
                     if (i == wherePos) check = x;
@@ -514,15 +516,15 @@ namespace my_db {
                     int width = 15;
                     if (tab[pos]->size[aimPos] != 1)
                         width = tab[pos]->size[aimPos];
-                    std::string tmp = tab[pos]->type[aimPos];
+                    string tmp = tab[pos]->type[aimPos];
                     if (tmp == "int")
-                        std::cout << std::left << std::setw(width) << atoi(out.c_str()) << std::endl;
+                        cout << left << setw(width) << atoi(out.c_str()) << endl;
                     else if (tmp == "float")
-                        std::cout << std::left << std::setw(width) << atof(out.c_str()) << std::endl;
+                        cout << left << setw(width) << atof(out.c_str()) << endl;
                     else if (tmp == "double")
-                        std::cout << std::left << std::setw(width) << atof(out.c_str()) << std::endl;
+                        cout << left << setw(width) << atof(out.c_str()) << endl;
                     else if (tmp == "char")
-                        std::cout << std::left << std::setw(width) << out << std::endl;
+                        cout << left << setw(width) << out << endl;
                 }
             }
         }

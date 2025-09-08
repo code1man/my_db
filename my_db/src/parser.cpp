@@ -2,14 +2,16 @@
 #include <algorithm>
 #include <sstream>
 
+using namespace std;
+
 namespace my_db {
     /// <summary>
     /// 变为小写
     /// </summary>
     /// <param name="s">输入命令</param>
-    void Parser::to_lower(std::string& s) {
+    void Parser::to_lower(string& s) {
         for (char& c : s) {
-            c = std::tolower(c);
+            c = tolower(c);
         }
     }
 
@@ -19,11 +21,11 @@ namespace my_db {
     /// <param name="s">输入的命令</param>
     /// <param name="delimiter"></param>
     /// <returns></returns>
-    std::vector<std::string> Parser::split_string(const std::string& s, char delimiter) {
-        std::vector<std::string> tokens;
-        std::string token;
-        std::istringstream tokenStream(s);
-        while (std::getline(tokenStream, token, delimiter)) {
+    vector<string> Parser::split_string(const string& s, char delimiter) {
+        vector<string> tokens;
+        string token;
+        istringstream tokenStream(s);
+        while (getline(tokenStream, token, delimiter)) {
             if (!token.empty()) {
                 tokens.push_back(token);
             }
@@ -31,9 +33,9 @@ namespace my_db {
         return tokens;
     }
 
-    ParsedCommand Parser::parse(const std::string& input) {
+    ParsedCommand Parser::parse(const string& input) {
         ParsedCommand cmd;
-        std::string lower_input = input;
+        string lower_input = input;
         to_lower(lower_input);
 
         auto tokens = split_string(lower_input, ' ');
@@ -41,7 +43,7 @@ namespace my_db {
             return cmd;
         }
 
-        const std::string& first_token = tokens[0];
+        const string& first_token = tokens[0];
         if (first_token == "create") {
             if (tokens.size() > 1 && tokens[1] == "database") {
                 cmd.type = CommandType::CREATE_DB;
