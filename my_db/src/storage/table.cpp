@@ -24,11 +24,11 @@ namespace my_db {
 
     Table& Table::operator=(Table&& other) noexcept {
         if (this != &other) {
-            // 释放当前资源
+            // 閲婃斁褰撳墠璧勬簮
             if (fp != nullptr) {
                 fclose(fp);
             }
-            // 移动资源
+            // 绉诲姩璧勬簮
             name = move(other.name);
             path_name = move(other.path_name);
             col_name = move(other.col_name);
